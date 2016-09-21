@@ -95,6 +95,8 @@ function runSearch(e) {
 	searchText = "&fts=" + input.value.split(' ').join('+');
 	var searchURL = url + searchText + "&limit=" + limit;
 
+	h1.textContent = "Search results for: '" + input.value + "'";
+	backBtn.classList.add("disabled");
 	//make ajax request and pass response to displayResults func
 	$.getJSON(searchURL, displayResults);
 
@@ -154,6 +156,7 @@ function browseByCategory(e) {
 		//display loader and hide browse categories
 		showLoader();
 		browse.classList.add("hidden");
+		backBtn.classList.add("disabled");
 
 		//set headline text
 		h1.textContent = e.target.textContent;
@@ -204,13 +207,13 @@ function addWish(e) {
 
 //mark as fulfilled and add to received array on icon click
 function markFulfilled(e) {
-	e.preventDefault();
 
 	//disregards all clicks that don't occur on ok icon
 	if(e.target.tagName != "SPAN") {
 		return;
 	} else if(e.target.classList.contains("glyphicon-ok")) {
 		//get clicked target and index
+		e.preventDefault();
 		var clicked = e.target.closest("figure");
 		var index = clicked.dataset.index;
 		var product = data.wishes[index];
@@ -243,13 +246,12 @@ function markFulfilled(e) {
 
 //remove saved item on icon click
 function deleteSavedItem(e) {
-	e.preventDefault();
 
 	//disregard clicks that don't occur on remove icon
 	if(e.target.tagName != "SPAN") {
 		return;
 	} else if(e.target.classList.contains("glyphicon-remove")) {
-
+		e.preventDefault();
 		//get clicked target and index
 		var clicked = e.target.closest("figure");
 		var index = clicked.dataset.index;
@@ -257,7 +259,7 @@ function deleteSavedItem(e) {
 		//remove from wishlist array
 		data.wishes.splice(index, 1)
 	} 
-
+	
 	//send new data object to firebase and update page
 	saveData();
 	displaySaved(data);
@@ -360,16 +362,21 @@ function displayResults(json) {
 
 	main.classList.remove("hidden");
 	hideLoader();
+	
 
 	if(results.length === 0) {
 		h1.textContent = "No results found, please try again";
+		main.innerHTML = "";
+		hidePager()
+		return
 	} else if(results.length <= 50) {
 		showPager()
+		moreBtn.classList.remove("disabled");
 
 		//compile template with 
 		var template = Handlebars.compile(resultsTemplate.innerHTML);
 		main.innerHTML = template(results);
-		h1.textContent = "Search results for: '" + input.value + "'";
+		
 
 		//dont display fulfilled template
 		fulfilled.innerHTML = "";

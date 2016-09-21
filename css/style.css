@@ -56,6 +56,9 @@ ul {
 }
 
 /* browse */
+.browse {
+	margin-bottom:60px;
+}
 .browse a {
 	text-decoration: none;
 	cursor: pointer;
@@ -217,15 +220,13 @@ figure:hover figcaption {
 /* fulfilled */
 section#fulfilled-container {
 	width:100%;
-	background-color:lavenderblush;
+	background-color: #fff0f5;
 }
 .fulfilled-container {
-	width:50%;
+	width:70%;
 	margin:40px auto 0;
 	padding:10px 0 80px;
 	max-width: 650px;
-	min-width:450px;
-
 }
 .fulfilled-container h3 {
  	text-align:left;;
@@ -254,16 +255,30 @@ section#fulfilled-container {
 }
 
 /* pagination */
-.pager a {
-	color:palevioletred;
+.pager li > a, .pager li >span {
+	color:#3a3a3a;
+	border-color: #3a3a3a;
 }
-.pager a span {
-	color:grey;
+.pager {
+	margin-bottom: 30px;
 }
-
+.pager li > a:hover {
+	color:#3a3a3a;
+	background-color:#fff0f5;
+}
+.pager .disabled > a, .pager .disabled > a:focus {
+	color:#ddd;
+	border-color:#ddd;
+}
+.pager li > a:focus, .pager .disabled > a:focus {
+	background-color:#fff;
+}
 /* top button */
-
 button.top {
+	color: #3a3a3a;
+	background-color:#fff;
+	border:1px solid #ddd;
+	border-radius:3px;
 	position: fixed;
 	right:40px;
 	bottom:30px;
@@ -274,10 +289,15 @@ button.top {
          -o-transition: opacity 300ms ease-in;
             transition: opacity 300ms ease-in;
 }
+button.top:hover {
+	background-color: #fff0f5;
+}
 
 button.top.load {
 	opacity: 1;
+
 }
+
 
 
 
@@ -294,6 +314,16 @@ button.top.load {
 		margin-top:10px;
 	}
 }
+
+@media(max-width: 680px) {
+	.fulfilled-container ul li span {
+		float:none;
+	}
+	.fulfilled-container ul li {
+		margin-top:16px;
+	}
+}
+
 
 @media(max-width:470px) {
 	.search input {
