@@ -18,7 +18,7 @@ var fulfilledTemplate = document.querySelector("#fulfilled-template");
 var config = {
 	apiKey: "AIzaSyC0OdzgE2grH1ZTXHB4Z9dWdAsUL8M9rbc",
 	authDomain: "tinsel-4db11.firebaseapp.com",
-	databaseURL: "https://tinsel-4db11.firebaseio.com",
+	databaseURL: "https://tinsel-4db11.firebaseio.com"
 };
 
 firebase.initializeApp(config);
@@ -31,7 +31,6 @@ var data = {
 	"wishes": [],
 	"fulfilled": [0]
 };
-
 
 
 //DOM Elements
@@ -79,9 +78,8 @@ window.addEventListener("scroll", revealTopButton);
 
 //on load, grab firebase data and dispaly saved items
 function init(e) {
-	
 	firebaseRef.once('value').then(getData);
-}
+};
 
 //run ajax request with input field value as search parameters
 function runSearch(e) {
@@ -99,49 +97,54 @@ function runSearch(e) {
 	backBtn.classList.add("disabled");
 	//make ajax request and pass response to displayResults func
 	$.getJSON(searchURL, displayResults);
-
 };
 
 function moreResults(e) {
 	e.preventDefault();
 
+	//set endpoint offset value
 	offset += limit;
 
 	if(offset >= 5000) {
 		moreBtn.classList.add("disabled");
 		return;
 	}
+	//show loader, disable back pager and move pageview to top
 	showLoader();
 	backBtn.classList.remove("disabled");
 	window.scroll(0, 0);
 
+	//check if search or browse click 
 	if(searchText == "") {
 		var browseURL = url + browseCat + "&offset=" + offset + "&limit=" + limit;
 		$.getJSON(browseURL, displayResults);
 	} else {
 		var searchURL = url + searchText + "&offset=" + offset + "&limit=" + limit;
-		$.getJSON(searchURL, displayResults)
+		$.getJSON(searchURL, displayResults);
 	}
 };
 
 function previousResults(e) {
 	e.preventDefault();
+
+	//set endpoint offset value
 	offset -= limit;
+
+	//show loader and enable/disable pagers and move to top
+	showLoader();
 	moreBtn.classList.remove("disabled");
-	
 	if(offset == 0) {
 		backBtn.classList.add("disabled");
 	}
-
-	showLoader();
 	window.scroll(0, 0);
 
+	//check if search or browse click
 	if(searchText == "") {
 		var browseURL = url + browseCat + "&offset=" + offset + "&limit=" + limit;
 		$.getJSON(browseURL, displayResults);
 	} else {
 		var searchURL = url + searchText + "&offset=" + offset + "&limit=" + limit;
-		$.getJSON(searchURL, displayResults)
+		$.getJSON(searchURL, displayResults);
 	}
 };
 
@@ -177,7 +180,7 @@ function addWish(e) {
 	//disregard any clicks that dont occur on span tag
 	if(e.target.tagName != "SPAN") {
 		return;
-	};
+	}
 
 	e.preventDefault();
 	//get clicked target and index
@@ -192,6 +195,7 @@ function addWish(e) {
 		price: product.price,
 		image: product.image.sizes.Large.url,
 		url: product.clickUrl,
+		alt: product.unbrandedName,
 		fulfilled: false
 	};
 
@@ -257,7 +261,7 @@ function deleteSavedItem(e) {
 		var index = clicked.dataset.index;
 
 		//remove from wishlist array
-		data.wishes.splice(index, 1)
+		data.wishes.splice(index, 1);
 	} 
 	
 	//send new data object to firebase and update page
@@ -319,8 +323,7 @@ function revealTopButton(e) {
 	topBtn.addEventListener("click", function() {
 		window.scroll(0,0);
 	});
-
-}
+};
 
 //firebase functions 
 //..................... 
@@ -367,10 +370,10 @@ function displayResults(json) {
 	if(results.length === 0) {
 		h1.textContent = "No results found, please try again";
 		main.innerHTML = "";
-		hidePager()
-		return
+		hidePager();
+		return;
 	} else if(results.length <= 50) {
-		showPager()
+		showPager();
 		moreBtn.classList.remove("disabled");
 
 		//compile template with 
@@ -389,10 +392,6 @@ function displayResults(json) {
 			moreBtn.classList.add("disabled");
 		}
 	}
-
-	//clear search field
-	// input.value = "";
-
 };
 
 //compile saved wishes template with data.wishes array
@@ -452,19 +451,19 @@ function showBrowse(e) {
 	browse.classList.remove('hidden');
 };
 
+//toggle pager 
 function showPager() {
 	pager.classList.remove("hidden");
-}
+};
 function hidePager() {
 	pager.classList.add("hidden");
-}
+};
 
 
 //toggle loader gif functions
 function hideLoader() {
 	loader.classList.add("hidden");
 };
-
 function showLoader() {
 	loader.classList.remove("hidden");
 };
